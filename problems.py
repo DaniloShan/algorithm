@@ -837,7 +837,7 @@ class Solution(object):
         28 -> AB
     """
     # @return a string
-    # TODO: 啊啊啊啊啊啊 尼玛
+    # TODO: damn it
     def convert_to_title(self, num):
         digits, n, results = [], 0, []
         title_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
@@ -878,7 +878,69 @@ class Solution(object):
 
         return result
 
-    
+    """Valid Parentheses
+    Given a string containing just the characters '(', ')', '{', '}', '[' and ']',
+     determine if the input string is valid.
+
+    The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+    """
+    # @return a boolean
+    def is_valid(self, s):
+        tmp = []
+        match = '()[]{}'
+
+        for item in s:
+            if len(tmp) and tmp[-1] + item in match:
+                tmp.pop()
+            else:
+                tmp.append(item)
+
+        return len(tmp) == 0
+
+    """
+    # another solution
+        pointer, l = 0, len(s)
+        match, tmp = '(){}[]', list(s)
+
+        while(l > 0):
+            if pointer and tmp[pointer - 1] + tmp[pointer] in match:
+                tmp.pop(pointer)
+                tmp.pop(pointer - 1)
+                pointer -= 1
+            else:
+                pointer += 1
+
+            l -= 1
+
+        return len(tmp) == 0
+    """
+
+    """Merge Sorted Array
+    Given two sorted integer arrays A and B, merge B into A as one sorted array.
+
+    Note:
+    You may assume that A has enough space (size that is greater or equal to m + n)
+    to hold additional elements from B.
+    The number of elements initialized in A and B are m and n respectively.
+    """
+    # @param A  a list of integers
+    # @param m  an integer, length of A
+    # @param B  a list of integers
+    # @param n  an integer, length of B
+    # @return nothing
+    def merge(self, A, B):
+        if len(A) <= 0:
+            A = B
+            return A
+        elif len(B) <= 0:
+            return A
+
+        for nb, i in enumerate(B[::-1]):
+
+            for na, j in enumerate(A[::-1]):
+                if na <= nb:
+                    A.insert(i + 1, nb)
+                    break
 
 solution = Solution()
 
@@ -935,8 +997,10 @@ solution = Solution()
 # print(solution.trailing_zeroes(5))
 # print(solution.trailing_zeroes(30))
 
-print(solution.convert_to_title(12345))
-print(solution.convert_to_title(52))
-print(solution.convert_to_title(78))
-print(solution.convert_to_title(27))
-print(solution.convert_to_title(701))
+# print(solution.convert_to_title(12345))
+# print(solution.convert_to_title(52))
+# print(solution.convert_to_title(78))
+# print(solution.convert_to_title(27))
+# print(solution.convert_to_title(701))
+
+print(solution.merge([], [1]))

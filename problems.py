@@ -1,5 +1,5 @@
 #! /usr/local/bin/python3
-#! /usr/bin/python3
+# ! /usr/bin/python3
 
 
 class TreeNode(object):
@@ -537,8 +537,37 @@ class Solution(object):
     # @param num, a list of integers
     # @return an integer
     def majority_element(self, num):
+        # hash table solution
+        # majority, tmp_dic = 0, {}
+        #
+        # for n in num:
+        #     tmp_dic[n] = tmp_dic[n] + 1 if n in tmp_dic else 1
+        #     if majority not in tmp_dic:
+        #         majority = n
+        #     else:
+        #         majority = n if tmp_dic[n] > tmp_dic[majority] else majority
+        #
+        # return majority if tmp_dic[majority] > len(num) / 2 else 0
 
-        return num
+        # one line solution
+        # return num.sort() or num[len(num) // 2]
+
+        # Moore voting algorithm
+        majority = [False, 0]
+
+        for n in num:
+            if not majority[0]:
+                majority[0] = n
+                majority[1] = 1
+            elif majority[0] == n:
+                majority[1] += 1
+            else:
+                majority[1] -= 1
+                if not majority[1]:
+                    majority = [False, 0]
+
+        return majority[0] or 0
+
 
     """Symmetric Tree
     Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
@@ -923,24 +952,122 @@ class Solution(object):
     to hold additional elements from B.
     The number of elements initialized in A and B are m and n respectively.
     """
+    # TODO: unknown error
     # @param A  a list of integers
     # @param m  an integer, length of A
     # @param B  a list of integers
     # @param n  an integer, length of B
     # @return nothing
-    def merge(self, A, B):
-        if len(A) <= 0:
-            A = B
-            return A
-        elif len(B) <= 0:
-            return A
+    def merge(self, A, m, B, n):
+        i, j = 0, 0
 
-        for nb, i in enumerate(B[::-1]):
+        if m == 0:
+            while j < n:
+                A.append(B[j])
+                j += 1
+            return
 
-            for na, j in enumerate(A[::-1]):
-                if na <= nb:
-                    A.insert(i + 1, nb)
-                    break
+        while i < m and j < n:
+            if not B[j]:
+                break
+            elif A[i] > B[j]:
+                A.insert(i, B[j])
+                j += 1
+
+            i += 1
+
+        if j < n:
+            while j < n:
+                if A[-1] > B[j]:
+                    A.insert(-1, B[j])
+                else:
+                    A.append(B[j])
+
+                j += 1
+
+
+    """Compare Version Numbers
+    Compare two version numbers version1 and version2.
+    If version1 > version2 return 1, if version1 < version2 return -1, otherwise return 0.
+
+    You may assume that the version strings are non-empty and contain only digits and the . character.
+    The . character does not represent a decimal point and is used to separate number sequences.
+    For instance, 2.5 is not "two and a half" or "half way to version three", it is the fifth second-level revision of the second first-level revision.
+
+    Here is an example of version numbers ordering:
+
+    0.1 < 1.1 < 1.2 < 13.37
+    """
+    # @param version1, a string
+    # @param version2, a string
+    # @return an integer
+    def compare_version(self, version1, version2):
+        arr_1, arr_2 = version1.split('.'), version2.split('.')
+        points = 0
+
+        if not len(arr_1) and len(arr_2):
+            return -1
+        elif not len(arr_2) and len(arr_1):
+            return 1
+
+        if len(arr_1) > len(arr_2):
+            larger, smaller = arr_1, arr_2
+        else:
+            smaller, larger = arr_1, arr_2
+
+        for i, n in enumerate(larger):
+            if i >= len(smaller):
+
+                if points == 0 and int(n) > 0:
+                    return 1 if larger == arr_1 else -1
+                else:
+                    if points == 1 and larger == arr_1:
+                        return 1
+                    if points == -1 and larger == arr_2:
+                        return -1
+                continue
+            if not points:
+                if int(arr_1[i]) > int(arr_2[i]):
+                    return 1
+                elif int(arr_1[i]) < int(arr_2[i]):
+                    return -1
+
+        return points
+
+"""Min Stack
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+"""
+class MinStack:
+    def __init__(self):
+        self.min_stack = []
+        self.stack = []
+
+    # @param x, an integer
+    # @return an integer
+    def push(self, x):
+        self.stack.append(x)
+        if len(self.min_stack) == 0 or x <= self.min_stack[-1]:
+            self.min_stack.append(x)
+        return x
+
+    # @return nothing
+    def pop(self):
+        if self.stack[-1] == self.min_stack[-1]:
+            self.min_stack.pop()
+        self.stack.pop()
+
+    # @return an integer
+    def top(self):
+        return self.stack[-1]
+
+    # @return an integer
+    def getMin(self):
+        return self.min_stack[-1]
+
 
 solution = Solution()
 
@@ -1003,4 +1130,9 @@ solution = Solution()
 # print(solution.convert_to_title(27))
 # print(solution.convert_to_title(701))
 
-print(solution.merge([], [1]))
+# arr1 = []
+# arr2 = [1]
+# print(solution.merge(arr1, len(arr1), arr2, len(arr2)))
+# print(arr1)
+
+print(solution.compare_version('1', '1.1'))

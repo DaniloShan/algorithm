@@ -1034,6 +1034,55 @@ class Solution(object):
 
         return points
 
+    """Remove Nth Node From End of List
+    Given a linked list, remove the nth node from the end of list and return its head.
+    For example,
+
+       Given linked list: 1->2->3->4->5, and n = 2.
+
+       After removing the second node from the end, the linked list becomes 1->2->3->5.
+    Note:
+    Given n will always be valid.
+    Try to do this in one pass.
+    """
+    # Definition for singly-linked list.
+    # class ListNode:
+    #     def __init__(self, x):
+    #         self.val = x
+    #         self.next = None
+    # @return a ListNode
+    def remove_nth_from_end(self, head, n):
+        origin = tmp_node = ListNode(0)
+        tmp_list = []
+
+        if not head.next:
+            return tmp_node
+
+        tmp_node.next = head
+
+        tmp_list.append(tmp_node)
+
+        while tmp_node:
+            tmp_list.insert(0, tmp_node)
+            tmp_node = tmp_node.next
+
+            if len(tmp_list) > n + 1:
+                tmp_list.pop()
+
+        if tmp_list[-1] == origin:
+            return tmp_list[-3]
+        elif n == 1:
+            return tmp_list[-2]
+        else:
+            tmp_list[-1].next = tmp_list[-3]
+            return tmp_list[-1]
+
+
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
 """Min Stack
 Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
 push(x) -- Push element x onto stack.
@@ -1136,3 +1185,10 @@ solution = Solution()
 # print(arr1)
 
 print(solution.compare_version('1', '1.1'))
+
+n1 = ListNode(1)
+n2 = ListNode(2)
+n1.next = n2
+n2.next = None
+
+print(solution.remove_nth_from_end(n1, 2))

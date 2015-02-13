@@ -1,6 +1,8 @@
 #! /usr/local/bin/python3
-# ! /usr/bin/python3
+#! /usr/bin/python3
 
+
+import re
 
 class TreeNode(object):
     def __init__(self, x):
@@ -1078,6 +1080,42 @@ class Solution(object):
             return tmp_list[-1]
 
 
+    def two_sum(self, num, target):
+        result = {}
+        for i, n in enumerate(num, 1):
+            if target - n not in result:
+                result[n] = i
+            else:
+                return result[target - n], i
+
+        print(result)
+
+        return ()
+
+    """Valid Number
+    Validate if a given string is numeric.
+
+    Some examples:
+    "0" => true
+    " 0.1 " => true
+    "abc" => false
+    "1 a" => false
+    "2e10" => true
+    Note: It is intended for the problem statement to be ambiguous.
+    You should gather all requirements up front before implementing one.
+    """
+    # @param s, a string
+    # @return a boolean
+    def is_number(self, s):
+        pattern = re.compile(r'\s*\d+(\.\d+)?(e\d+)?\s*')
+        match = pattern.match(s)
+
+        if match:
+            if len(match.group()) == len(s):
+                return True
+
+        return False
+
 class ListNode:
     def __init__(self, x):
         self.val = x
@@ -1191,4 +1229,4 @@ n2 = ListNode(2)
 n1.next = n2
 n2.next = None
 
-print(solution.remove_nth_from_end(n1, 2))
+print(solution.two_sum([3, 2, 4], 6))
